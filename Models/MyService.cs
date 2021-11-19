@@ -1,15 +1,13 @@
 using System.ComponentModel.DataAnnotations;
-
+using Newtonsoft.Json;
 namespace DemoService.Models
 {
     public class MyService
     {
-        [Key]
-        [Required]
-        public int Id { get; set; }
+        [JsonProperty(PropertyName = "id")]
+        public string Id { get; set; }
 
-        [Required]
-        [MaxLength(250)]
+        [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
     }
 }

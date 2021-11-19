@@ -8,7 +8,7 @@ namespace DemoService.Data
         bool SaveChanges();
 
         IEnumerable<MyService> GetAllMyServices();
-        MyService GetMyServiceById(int id);
+        MyService GetMyServiceById(string id);
         void CreateMyService(MyService cmd);
         void UpdateMyService(MyService cmd);
         void DeleteMyService(MyService cmd);

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Code-Project\\DemoService\\DemoService.csproj": {}
+    "D:\\Cosmic_v1\\DemoService\\DemoService.csproj": {}
   },
   "projects": {
-    "C:\\Code-Project\\DemoService\\DemoService.csproj": {
+    "D:\\Cosmic_v1\\DemoService\\DemoService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Code-Project\\DemoService\\DemoService.csproj",
+        "projectUniqueName": "D:\\Cosmic_v1\\DemoService\\DemoService.csproj",
         "projectName": "DemoService",
-        "projectPath": "C:\\Code-Project\\DemoService\\DemoService.csproj",
+        "projectPath": "D:\\Cosmic_v1\\DemoService\\DemoService.csproj",
         "packagesPath": "C:\\Users\\mingjingyu\\.nuget\\packages\\",
-        "outputPath": "C:\\Code-Project\\DemoService\\obj\\",
+        "outputPath": "D:\\Cosmic_v1\\DemoService\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\mingjingyu\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -44,6 +44,14 @@
               "target": "Package",
               "version": "[8.1.1, )"
             },
+            "Microsoft.Azure.Cosmos": {
+              "target": "Package",
+              "version": "[3.23.0, )"
+            },
+            "Microsoft.Azure.Services.AppAuthentication": {
+              "target": "Package",
+              "version": "[1.6.2, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[5.0.0, )"
@@ -57,6 +65,14 @@
             "Microsoft.EntityFrameworkCore.InMemory": {
               "target": "Package",
               "version": "[5.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.AzureKeyVault": {
+              "target": "Package",
+              "version": "[3.1.21, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

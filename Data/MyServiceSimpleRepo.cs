@@ -39,7 +39,7 @@ namespace DemoService.Data
             return _context.MyServices.ToList();
         }
 
-        public MyService GetMyServiceById(int id)
+        public MyService GetMyServiceById(string id)
         {
             return _context.MyServices.FirstOrDefault(p => p.Id == id);
         }

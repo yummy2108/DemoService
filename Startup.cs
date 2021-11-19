@@ -14,6 +14,8 @@ using Microsoft.OpenApi.Models;
 using DemoService.Models;
 using DemoService.Data;
 using Microsoft.EntityFrameworkCore;
+using DemoService.Service;
+using Microsoft.Azure.Cosmos;
 
 namespace DemoService
 {
@@ -22,6 +24,19 @@ namespace DemoService
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+        }
+
+        private static async Task<CosmosDbService> InitializeCosmosClientInstanceAsync(IConfigurationSection configurationSection, string CosmosConnectionString)
+        {
+            var databaseName = configurationSection["DatabaseName"];
+            var containerName = configurationSection["ContainerName"];
+
+            var client = new CosmosClient(CosmosConnectionString);
+            var database = await client.CreateDatabaseIfNotExistsAsync(databaseName);
+            await database.Database.CreateContainerIfNotExistsAsync(containerName, "/id");
+
+            var cosmosDbService = new CosmosDbService(client, databaseName, containerName);
+            return cosmosDbService;
         }
 
         public IConfiguration Configuration { get; }
@@ -34,6 +49,8 @@ namespace DemoService
             services.AddScoped<IMyServiceRepo, MyServiceSimpleRepo>();
             services.AddDbContext<MyServiceContext>(opt =>
                                     opt.UseInMemoryDatabase("MyServiceList"));
+            var CosmosConnectionString = Configuration.GetValue<string>(Configuration["KeyVault:ConnectionStringSecretId"]);
+            services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("CosmosDb"),CosmosConnectionString).GetAwaiter().GetResult());
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DemoService", Version = "v1" });
