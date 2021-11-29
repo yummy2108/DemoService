@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-webapi
+  labels:
+    app: yummy-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: demo-webapi
+  template:
+    metadata:
+      labels:
+        app: yummy-app
+        service: demo-webapi
+    spec:
+      containers:
+        - name: demo-webapi
+          image: yummycontainerregister.azurecr.io/mydemoservice:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              protocol: TCP
+          env:
+            - name: WebApiBaseAddress
+              value: http://webapi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-webapi
+  labels:
+    app: yummy-app
+    service: demo-webapi
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    service: demo-webapi
