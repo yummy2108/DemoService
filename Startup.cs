@@ -16,6 +16,13 @@ using DemoService.Data;
 using Microsoft.EntityFrameworkCore;
 using DemoService.Service;
 using Microsoft.Azure.Cosmos;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DemoService
 {
@@ -47,10 +54,19 @@ namespace DemoService
 
             services.AddControllers();
             services.AddScoped<IMyServiceRepo, MyServiceSimpleRepo>();
+
             services.AddDbContext<MyServiceContext>(opt =>
                                     opt.UseInMemoryDatabase("MyServiceList"));
             var CosmosConnectionString = Configuration.GetValue<string>(Configuration["KeyVault:ConnectionStringSecretId"]);
-            services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("CosmosDb"),CosmosConnectionString).GetAwaiter().GetResult());
+            services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("CosmosDb"),CosmosConnectionString)
+                .GetAwaiter().GetResult());
+            
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(opt =>
+                    {
+                        opt.Audience = Configuration["AzureAD:ValidAudiences"];
+                        opt.Authority = $"{Configuration["AzureAD:Instance"]}{Configuration["AzureAD:TenantId"]}";
+                    });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DemoService", Version = "v1" });
@@ -60,16 +76,18 @@ namespace DemoService
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DemoService v1"));
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //    app.UseSwagger();
+            //    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DemoService v1"));
+            //}
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
